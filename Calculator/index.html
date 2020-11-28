@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>教学工作量计算器</title>
+<style>
+/* * {
+  box-sizing:border-box;
+} */
+
+.calculator {
+  background-color:#4CAF50;
+  margin:auto;
+}
+
+td, input {
+  text-align: right;
+}
+
+p {
+  color:red;
+  text-align: center;
+}
+
+#calculate {
+  width: 100%;
+  text-align: center;
+}
+
+/* Use a media query to add a break point at 800px: */
+@media screen and (max-width:800px) {
+  .left, .main, .right {
+    width:100%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
+}
+</style>
+</head>
+
+<body>
+
+<table class="calculator">
+    <tr>
+      <td>授课学时:</td>
+      <td><input type="text" id="class_hour" value="0"></td> 
+    </tr>
+    <tr>
+      <td>班级人数:</td>
+      <td><input type="text" id="number" value="15"></td> 
+    </tr>
+    <tr>
+        <td>工程认证系数:</td>
+        <td><input type="text" id="engineering_coefficient" value="1.0"></td> 
+    </tr>
+    <tr>
+        <td>双语教学系数:</td>
+        <td><input type="text" id="bilingual_coefficient" value="1.0"></td> 
+    </tr>
+    <tr>
+        <td>教学工作量:</td>
+        <td><input type="text" id="work_load" value="0" readonly></td> 
+    </tr>
+    <tr>
+        <td colspan="2"><input type="button" id="calculate" value="计算"></td>
+    </tr>
+</table>
+
+<p>仅供娱乐！如出现任何问题，概不负责！</p>
+<p>此版本可以算多门课程！每门课程的参数用空格隔开！</p>
+
+<script>
+    var number = 0;
+    var ch = 0;
+    var ec = 1.0; // engineering_coefficient
+    var bc = 1.0; // bilingual_coefficient
+    var wl = 0.0; // work load
+
+    document.getElementById("calculate").addEventListener("click", update_data);
+
+    function update_data() {
+        ch = document.getElementById("class_hour").value.split(" ");
+        number = document.getElementById("number").value.split(" ");
+        ec = document.getElementById("engineering_coefficient").value.split(" ");
+        bc = document.getElementById("bilingual_coefficient").value.split(" ");
+        if(new Set([ch.length, number.length, ec.length, bc.length]).size > 1){
+            alert("输入参数的数量必须相同！");
+        }
+        wl = 0;        
+        for(i=0;i<ch.length;i++){
+            if (number[i] <= 35)
+            {
+                number[i] = 35;
+            }
+            wl += ch[i] * ((number[i] - 35.0) / 35.0 * 0.3 + 1) * ec[i] * bc[i];
+        }
+        document.getElementById("work_load").value = wl.toFixed(2);
+    }
+</script>
+
+</body>
+
+</html>
